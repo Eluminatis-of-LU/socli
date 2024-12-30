@@ -16,4 +16,8 @@ jobs:
           spec: './socli.py'
           requirements: './requirements.txt'
           upload_exe_with_name: 'socli.exe'
-          options: --onefile, --name "socli", --windowed
+          options: --onefile, --name "socli", --console
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "**/socli.exe"
+          tag: v1
