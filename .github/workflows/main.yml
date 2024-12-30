@@ -16,4 +16,15 @@ jobs:
           spec: './socli.py'
           requirements: './requirements.txt'
           upload_exe_with_name: 'socli.exe'
-          options: --onefile, --name "socli", --windowed
+          options: --onefile, --name "socli", --console
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: main
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "**/socli.exe"
+          name: ${{ steps.semver.outputs.next }}
+          tag: ${{ steps.semver.outputs.next }}
