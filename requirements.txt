@@ -1,0 +1,6 @@
+keyrings.cryptfile
+keyring
+click
+httpx
+python-dotenv
+pyinstaller
