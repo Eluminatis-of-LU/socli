@@ -13,7 +13,7 @@ jobs:
         with:
           python_ver: '3.12'
           pyinstaller_ver: '==5.13.2'
-          spec: './socli.spec'
+          spec: './socli.py'
           requirements: './requirements.txt'
           upload_exe_with_name: 'socli.exe'
           options: --onefile, --name "socli", --windowed
