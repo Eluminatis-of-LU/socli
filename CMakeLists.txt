@@ -29,8 +29,8 @@ if(NOT curl_FOUND)
     endif()
 endif()
 
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*)
-
+include_directories(${CMAKE_SOURCE_DIR}/lib)
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/* lib/*)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} libcurl)
