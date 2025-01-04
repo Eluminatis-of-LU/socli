@@ -23,5 +23,6 @@ jobs:
         with:
           name: build-artifact-${{ matrix.os }}
           path: |
-            build\\**\\socli*
+            build\\**\\socli.exe
+            build/bin/socli
 
