@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <curl/curl.h>
-#include "ketopt.h"
+#include <ketopt.h>
+#include <sr_keychain.h>
 #ifndef NDEBUG
 #define STB_LEAKCHECK_IMPLEMENTATION
 #define STB_LEAKCHECK_SHOWALL
-#include "stb_leakcheck.h"
+#include <stb_leakcheck.h>
 #define TARGET_URL "http://judge_ui:8888"
 #else
 #define TARGET_URL "https://judge.eluminatis-of-lu.com"
@@ -140,6 +141,22 @@ int login_command_func(struct command *cur, int argc, char **argv)
             socli_exit(EXIT_FAILURE);
         }
         printf("login success\n");
+        struct curl_slist *cookies;
+        curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &cookies);
+        if (cookies)
+        {
+            printf("Cookies:\n");
+            for (struct curl_slist *cookie = cookies; cookie; cookie = cookie->next)
+            {
+                printf("%s\n", cookie->data);
+                int ret = sr_keychain_set_password("judge.eluminatis-of-lu.com", "socli", cookie->data);
+                if (ret != 0)
+                {
+                    fprintf(stderr, "Failed to save cookie: %s\n", cookie->data);
+                }
+            }
+            curl_slist_free_all(cookies);
+        }
     }
     return 0;
 }
@@ -267,13 +284,20 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    char COOKIEJAR[1024];
+    char* cookie = NULL;
+    int rev = sr_keychain_get_password("judge.eluminatis-of-lu.com", "socli", &cookie);
+    if (rev != 0)
+    {
+        fprintf(stderr, "Failed to get cookie from keychain\n");
+    }
+    if (cookie)
+    {
+        curl_easy_setopt(curl, CURLOPT_COOKIE, cookie);
+        free(cookie);
+    }
 
-    snprintf(COOKIEJAR, 1023, "%s/.socli_cookie", get_home_directory());
-
-    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, COOKIEJAR);
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
     curl_easy_perform(curl);
-    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, COOKIEJAR);
 
 #ifdef NDEBUG
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, noop_write_callback);

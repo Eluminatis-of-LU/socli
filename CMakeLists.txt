@@ -34,8 +34,14 @@ if(NOT curl_FOUND)
     endif()
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/lib)
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/* lib/*)
+include_directories(${CMAKE_SOURCE_DIR}/lib/include)
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/* lib/**/*.h lib/*.c) 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} CURL::libcurl_static)
+
+if (LINUX)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(deps REQUIRED IMPORTED_TARGET glib-2.0 libsecret-1)
+    target_link_libraries(${PROJECT_NAME} PkgConfig::deps)
+endif()
