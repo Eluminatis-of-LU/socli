@@ -12,6 +12,11 @@ set(CMAKE_C_STANDARD 11)
 
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+set(BUILD_CURL_EXE OFF)
+set(BUILD_SHARED_LIBS OFF)
+set(BUILD_STATIC_LIBS OFF)
+
+
 find_package(curl ${CURL_VERSION} QUIET)
 if(NOT curl_FOUND)
     message(STATUS "curl not found, downloading...")
@@ -33,4 +38,4 @@ include_directories(${CMAKE_SOURCE_DIR}/lib)
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/* lib/*)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} libcurl)
+target_link_libraries(${PROJECT_NAME} CURL::libcurl_static)
