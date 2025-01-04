@@ -1,6 +1,7 @@
 name: PR build validation
 on:
-  pull_request: ~
+  pull_request:
+    branches: [ main ]
 
 jobs:
   cmake-build:
@@ -13,4 +14,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          path: **/*.exe
+          path: build
+
