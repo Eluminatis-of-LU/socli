@@ -35,7 +35,7 @@ struct command
 
 struct command root_command = {
     .name = "socli",
-    .desc = "socli is a command line tool for managing SeriousOJ." "\nURL: " TARGET_URL,
+    .desc = "socli is a command line tool for managing SeriousOJ.",
     .help = "\nUsage: socli [command] [options]\n\nCommands:\n",
     .sub = NULL,
     .func = NULL};
@@ -73,6 +73,37 @@ int print_help_and_traverse(struct command *cur, int argc, char **argv)
     }
     print_help(cur);
     return -1;
+}
+
+void print_cookies()
+{
+    struct curl_slist *cookies;
+    CURLcode rev = curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &cookies);
+    if (cookies)
+    {
+        for (struct curl_slist *cookie = cookies; cookie; cookie = cookie->next)
+        {
+            printf("%s\n", cookie->data);
+        }
+        curl_slist_free_all(cookies);
+    }
+}
+
+void save_cookies()
+{
+    struct curl_slist *cookies;
+    curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &cookies);
+    if (cookies)
+    {
+        for (struct curl_slist *cookie = cookies; cookie; cookie = cookie->next)
+        {
+            if (sr_keychain_set_password(TARGET_URL, "socli", cookie->data))
+            {
+                fprintf(stderr, "Failed to save cookie: %s\n", cookie->data);
+            }
+        }
+        curl_slist_free_all(cookies);
+    }
 }
 
 int login_command_func(struct command *cur, int argc, char **argv)
@@ -134,29 +165,14 @@ int login_command_func(struct command *cur, int argc, char **argv)
             socli_exit(EXIT_FAILURE);
         }
         CURLcode http_code;
-        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
         if (!(http_code == 302 && res != CURLE_ABORTED_BY_CALLBACK))
         {
             fprintf(stderr, "login failed\n");
             socli_exit(EXIT_FAILURE);
         }
         printf("login success\n");
-        struct curl_slist *cookies;
-        curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &cookies);
-        if (cookies)
-        {
-            printf("Cookies:\n");
-            for (struct curl_slist *cookie = cookies; cookie; cookie = cookie->next)
-            {
-                printf("%s\n", cookie->data);
-                int ret = sr_keychain_set_password("judge.eluminatis-of-lu.com", "socli", cookie->data);
-                if (ret != 0)
-                {
-                    fprintf(stderr, "Failed to save cookie: %s\n", cookie->data);
-                }
-            }
-            curl_slist_free_all(cookies);
-        }
+        save_cookies();
     }
     return 0;
 }
@@ -214,7 +230,7 @@ int make_announcement_command_func(struct command *cur, int argc, char **argv)
             socli_exit(EXIT_FAILURE);
         }
         CURLcode http_code;
-        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
         if (!(http_code == 200 && res != CURLE_ABORTED_BY_CALLBACK))
         {
             fprintf(stderr, "make announcement failed\n");
@@ -230,7 +246,7 @@ size_t noop_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
     return size * nmemb;
 }
 
-const char* get_home_directory()
+const char *get_home_directory()
 {
 #ifdef _WIN32
     static char home_dir[MAX_PATH];
@@ -274,7 +290,8 @@ void cleanup_memory()
 }
 
 int main(int argc, char **argv)
-{
+{   
+    printf("URL: %s\n", TARGET_URL);
     atexit(cleanup_memory);
 
     curl = curl_easy_init();
@@ -283,21 +300,15 @@ int main(int argc, char **argv)
         fprintf(stderr, "Failed to initialize curl\n");
         return 1;
     }
+    
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
 
-    char* cookie = NULL;
-    int rev = sr_keychain_get_password("judge.eluminatis-of-lu.com", "socli", &cookie);
-    if (rev != 0)
+    char *cookie = NULL;
+    if (!sr_keychain_get_password(TARGET_URL, "socli", &cookie))
     {
-        fprintf(stderr, "Failed to get cookie from keychain\n");
-    }
-    if (cookie)
-    {
-        curl_easy_setopt(curl, CURLOPT_COOKIE, cookie);
+        curl_easy_setopt(curl, CURLOPT_COOKIELIST, cookie);
         free(cookie);
     }
-
-    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
-    curl_easy_perform(curl);
 
 #ifdef NDEBUG
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, noop_write_callback);

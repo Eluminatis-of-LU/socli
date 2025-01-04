@@ -101,7 +101,7 @@ int sr_keychain_get_password(const char* domain, const char* user, char** passwo
 		return 1;
 	}
 	PCREDENTIALW credential;
-	BOOL stat = CredReadW(targetName, CRED_TYPE_GENERIC, 0, &credential);
+	BOOL stat = CredRead(targetName, CRED_TYPE_GENERIC, 0, &credential);
 	SR_KEYCHAIN_FREE(targetName);
 
 	if(stat) {
