@@ -1,13 +1,16 @@
-name: Package Application with Pyinstaller
-
+name: PR build validation
 on:
   pull_request: ~
 
 jobs:
-  pyinstaller-build:
+  cmake-build:
     runs-on: windows-latest
     steps:
       - name: Checkout Project
         uses: actions/checkout@v4
       - name: Build Project
         uses: threeal/cmake-action@v2.1.0
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+          with:
+            path: **/socli.exe
