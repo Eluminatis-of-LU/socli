@@ -70,18 +70,19 @@ int print_help_and_traverse(struct command *cur, int argc, char **argv)
             return cur->sub[i].func(&cur->sub[i], argc - 1, argv + 1);
         }
     }
-    return 0;
+    print_help(cur);
+    return -1;
 }
 
 int login_command_func(struct command *cur, int argc, char **argv)
 {
     static ko_longopt_t login_longopts[] = {
-        {"username", 1, 0, 'u'},
-        {"password", 1, 0, 'p'},
-        {"help", 0, 0, 'h'},
-        {0, 0, 0, 0}};
+        {"username", 1, 0},
+        {"password", 1, 0},
+        {"help", 0, 0},
+        {0, 0, 0}};
     ketopt_t opt = KETOPT_INIT;
-    int i, c;
+    int c;
     bool help = false;
     while ((c = ketopt(&opt, argc + 1, argv - 1, 1, "u:p:h", login_longopts)) != -1)
     {
@@ -146,11 +147,11 @@ int login_command_func(struct command *cur, int argc, char **argv)
 int make_announcement_command_func(struct command *cur, int argc, char **argv)
 {
     static ko_longopt_t make_announcement_longopts[] = {
-        {"message", 1, 0, 'm'},
-        {"help", 0, 0, 'h'},
-        {0, 0, 0, 0}};
+        {"message", 1, 0},
+        {"help", 0, 0},
+        {0, 0, 0}};
     ketopt_t opt = KETOPT_INIT;
-    int i, c;
+    int c;
     bool help = false;
     char *message = NULL;
     while ((c = ketopt(&opt, argc + 1, argv - 1, 1, "m:h", make_announcement_longopts)) != -1)
@@ -299,8 +300,8 @@ int main(int argc, char **argv)
     arrpush(root_command.sub, make_announcement_command);
 
     root_command.func = print_help_and_traverse;
-    root_command.func(&root_command, argc - 1, argv + 1);
-    
-    socli_exit(EXIT_SUCCESS);
+    int res = root_command.func(&root_command, argc - 1, argv + 1);
+
+    socli_exit(res);
     return 0;
 }
