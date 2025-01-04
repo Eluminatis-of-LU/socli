@@ -14,5 +14,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          path: build
+          path: build\\**\\socli.exe
 
