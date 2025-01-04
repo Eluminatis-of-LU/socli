@@ -5,7 +5,11 @@ on:
 
 jobs:
   cmake-build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 2
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
       - name: Checkout Project
         uses: actions/checkout@v4
@@ -13,9 +17,11 @@ jobs:
         uses: threeal/cmake-action@v2.1.0
         with:
           options: CMAKE_BUILD_TYPE=Release
+          build-args: --config Release
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
+          name: build-artifact-${{ matrix.os }}
           path: |
             build\\**\\socli*
 
