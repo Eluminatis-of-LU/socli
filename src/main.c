@@ -34,7 +34,7 @@ struct command
 
 struct command root_command = {
     .name = "socli",
-    .desc = "socli is a command line tool for managing SeriousOJ.",
+    .desc = "socli is a command line tool for managing SeriousOJ." "\nURL: " TARGET_URL,
     .help = "\nUsage: socli [command] [options]\n\nCommands:\n",
     .sub = NULL,
     .func = NULL};
