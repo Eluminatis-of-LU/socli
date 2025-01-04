@@ -99,7 +99,7 @@ void save_cookies()
         {
             if (sr_keychain_set_password(TARGET_URL, "socli", cookie->data))
             {
-                fprintf(stderr, "Failed to save cookie\n");
+                fprintf(stderr, "Failed to save cookie to keyring.\n");
             }
         }
         curl_slist_free_all(cookies);
