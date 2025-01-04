@@ -1,4 +1,4 @@
-name: Package Application with Pyinstaller
+name: Build and package application
 
 on:
   push:
@@ -38,11 +38,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifact-windows-latest
-      - name: Extract build artifacts
-        run: |
-          mkdir -p build-artifacts
-          unzip -q build-artifact-ubuntu-latest.zip -d build-artifacts
-          unzip -q build-artifact-windows-latest.zip -d build-artifacts
       - name: Get Next Version
         id: semver
         uses: ietf-tools/semver-action@v1
