@@ -1,17 +1,52 @@
 #include <client.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+struct curl_slist *headers = NULL;
+
+static size_t
+mem_cb(void *contents, size_t size, size_t nmemb, void *userp)
+{
+    size_t realsize = size * nmemb;
+    struct response *mem = (struct response *)userp;
+
+    char *ptr = realloc(mem->memory, mem->size + realsize + 1);
+    if (!ptr)
+    {
+        /* out of memory! */
+        printf("not enough memory (realloc returned NULL)\n");
+        return 0;
+    }
+
+    mem->memory = ptr;
+    memcpy(&(mem->memory[mem->size]), contents, realsize);
+    mem->size += realsize;
+    mem->memory[mem->size] = 0;
+
+#ifndef NDEBUG
+    printf("Response: %s\n", mem->memory);
+#endif
+
+    return realsize;
+}
 
 void init_curl(void)
 {
     curl = curl_easy_init();
-    atexit(cleanup_curl);
     if (curl == NULL)
     {
         fprintf(stderr, "Failed to initialize curl\n");
         exit(EXIT_FAILURE);
     }
+    atexit(cleanup_curl);
+
+    response_body.memory = malloc(0);
+    response_body.size = 0;
 
     curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
+
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mem_cb);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response_body);
 
     char *cookie = NULL;
     if (!sr_keychain_get_password(TARGET_URL, "socli", &cookie))
@@ -20,16 +55,18 @@ void init_curl(void)
         free(cookie);
     }
 
-#ifdef NDEBUG
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, noop_write_callback);
-#else
-#endif
+    headers = curl_slist_append(headers, "Accept: application/json");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 }
 
 void cleanup_curl(void)
 {
     if (curl)
         curl_easy_cleanup(curl);
+    if (headers)
+        curl_slist_free_all(headers);
+    if (response_body.memory)
+        free(response_body.memory);
 }
 
 void print_cookies(void)

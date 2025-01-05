@@ -76,7 +76,7 @@ int login_command_func(struct command *cur, int argc, char **argv)
         }
         CURLcode http_code;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-        if (!(http_code == 302 && res != CURLE_ABORTED_BY_CALLBACK))
+        if (!((http_code == 302 || http_code == 200) && res != CURLE_ABORTED_BY_CALLBACK))
         {
             fprintf(stderr, "login failed\n");
             exit(EXIT_FAILURE);
