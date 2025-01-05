@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <ketopt.h>
 #include <stb_ds.h>
+#include <confirm.h>
 
 int announcement_create_command_func(struct command *cur, int argc, char **argv)
 {
@@ -48,6 +49,12 @@ int announcement_create_command_func(struct command *cur, int argc, char **argv)
     {
         char postdata[1024];
         snprintf(postdata, 1023, "message=%s", message);
+        if (message)
+            curl_free(message);
+        if (!confirm_command(cur->name))
+        {
+            return 0;
+        }
         curl_easy_setopt(curl, CURLOPT_URL, target_url("api/v1/announcement"));
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postdata);
         CURLcode res = curl_easy_perform(curl);
@@ -84,7 +91,7 @@ struct command announcement_create_command = {
     .func = announcement_create_command_func,
 };
 
-struct command* init_announcement_command(void)
+struct command *init_announcement_command(void)
 {
     arrpush(announcement_command.sub, &announcement_create_command);
     return &announcement_command;
