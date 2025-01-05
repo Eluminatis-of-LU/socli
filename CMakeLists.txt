@@ -34,8 +34,9 @@ if(NOT curl_FOUND)
     endif()
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/lib/include)
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/* lib/**/*.h lib/*.c) 
+include_directories(${CMAKE_SOURCE_DIR}/include)
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/* lib/* include/*) 
+message("SOURCES: ${SOURCES}")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} CURL::libcurl_static)
