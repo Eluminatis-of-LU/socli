@@ -5,7 +5,6 @@
 #include <sr_keychain.h>
 
 #ifndef NDEBUG
-// #define TARGET_URL "http://127.0.0.1:8888"
 #define TARGET_URL "http://judge_ui:8888"
 #else
 #define TARGET_URL "https://judge.eluminatis-of-lu.com"
@@ -13,13 +12,13 @@
 
 #define target_url(x) TARGET_URL "/" x
 
-CURL *curl;
 struct response
 {
     char *memory;
     size_t size;
 };
-struct response response_body;
+extern struct response response_body;
+extern CURL *curl;
 
 void init_curl(void);
 void cleanup_curl(void);
