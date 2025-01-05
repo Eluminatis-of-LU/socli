@@ -2,18 +2,11 @@
 #include <client.h>
 #include <stdbool.h>
 #include <ketopt.h>
+#include <stb_ds.h>
 
-struct command make_announcement_command = {
-    .name = "make-announcement",
-    .desc = "make an announcement",
-    .help = "make-announcement --message [message]",
-    .sub = NULL,
-    .func = make_announcement_command_func,
-};
-
-int make_announcement_command_func(struct command *cur, int argc, char **argv)
+int announcement_create_command_func(struct command *cur, int argc, char **argv)
 {
-    static ko_longopt_t make_announcement_longopts[] = {
+    static ko_longopt_t announcement_create_longopts[] = {
         {"message", 1, 0},
         {"help", 0, 0},
         {0, 0, 0}};
@@ -21,7 +14,7 @@ int make_announcement_command_func(struct command *cur, int argc, char **argv)
     int c;
     bool help = false;
     char *message = NULL;
-    while ((c = ketopt(&opt, argc + 1, argv - 1, 1, "m:h", make_announcement_longopts)) != -1)
+    while ((c = ketopt(&opt, argc + 1, argv - 1, 1, "m:h", announcement_create_longopts)) != -1)
     {
         switch (c)
         {
@@ -73,4 +66,26 @@ int make_announcement_command_func(struct command *cur, int argc, char **argv)
         printf("make announcement success\n");
     }
     return 0;
+}
+
+struct command announcement_command = {
+    .name = "announcement",
+    .desc = "manage announcements",
+    .help = "\nUsage: socli announcement [command] [options]\n\nCommands:\n",
+    .sub = NULL,
+    .func = print_help_and_traverse,
+};
+
+struct command announcement_create_command = {
+    .name = "create",
+    .desc = "create an announcement",
+    .help = "create --message",
+    .sub = NULL,
+    .func = announcement_create_command_func,
+};
+
+struct command* init_announcement_command(void)
+{
+    arrpush(announcement_command.sub, &announcement_create_command);
+    return &announcement_command;
 }

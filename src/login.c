@@ -5,14 +5,6 @@
 #include <stdlib.h>
 #include <client.h>
 
-struct command login_command = {
-    .name = "login",
-    .desc = "login to SeriousOJ",
-    .help = "login --username [username] --password [password]",
-    .sub = NULL,
-    .func = login_command_func,
-};
-
 char *username = NULL, *password = NULL;
 
 void free_login_memory(void)
@@ -93,4 +85,18 @@ int login_command_func(struct command *cur, int argc, char **argv)
         save_cookies();
     }
     return 0;
+}
+
+struct command login_command = {
+    .name = "login",
+    .desc = "login to SeriousOJ",
+    .help = "login --username --password",
+    .sub = NULL,
+    .func = login_command_func,
+};
+
+
+struct command* init_login_command(void)
+{
+    return &login_command;
 }

@@ -2,8 +2,6 @@
 #define ANNOUNCEMENT_H
 #include <command.h>
 
-int make_announcement_command_func(struct command *cur, int argc, char **argv);
-
-struct command make_announcement_command;
+struct command* init_announcement_command(void);
 
 #endif // ANNOUNCEMENT_H

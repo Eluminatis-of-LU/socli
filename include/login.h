@@ -2,8 +2,6 @@
 #define LOGIN_H
 #include <command.h>
 
-int login_command_func(struct command *cur, int argc, char **argv);
-
-struct command login_command;
+struct command *init_login_command(void);
 
 #endif // LOGIN_H

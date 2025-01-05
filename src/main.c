@@ -6,6 +6,7 @@
 #include <command.h>
 #include <login.h>
 #include <announcement.h>
+#include <contest.h>
 
 #ifndef NDEBUG
 #define STB_LEAKCHECK_IMPLEMENTATION
@@ -21,7 +22,7 @@ struct command root_command = {
     .desc = "socli is a command line tool for managing SeriousOJ.",
     .help = "\nUsage: socli [command] [options]\n\nCommands:\n",
     .sub = NULL,
-    .func = NULL};
+    .func = print_help_and_traverse};
 
 void cleanup_memory(void)
 {
@@ -35,9 +36,9 @@ int main(int argc, char **argv)
 
     init_curl();
 
-    arrpush(root_command.sub, login_command);
-    arrpush(root_command.sub, make_announcement_command);
+    arrpush(root_command.sub, init_login_command());
+    arrpush(root_command.sub, init_announcement_command());
+    arrpush(root_command.sub, init_contest_command());
 
-    root_command.func = print_help_and_traverse;
     return root_command.func(&root_command, argc - 1, argv + 1);
 }
