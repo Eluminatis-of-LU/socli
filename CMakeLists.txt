@@ -16,6 +16,9 @@ set(BUILD_CURL_EXE OFF)
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_STATIC_LIBS OFF)
 
+if (WIN32)
+    set(CURL_USE_SCHANNEL ON)
+endif()
 
 find_package(curl ${CURL_VERSION} QUIET)
 if(NOT curl_FOUND)
