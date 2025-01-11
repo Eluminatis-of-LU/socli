@@ -61,7 +61,7 @@ file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/* lib/* inclu
 message("SOURCES: ${SOURCES}")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} CURL::libcurl_static logger)
+target_link_libraries(${PROJECT_NAME} CURL::libcurl_static logger_static)
 
 if (LINUX)
     find_package(PkgConfig REQUIRED)

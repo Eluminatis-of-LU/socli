@@ -32,6 +32,12 @@ int version_command_func(struct command *cur, int argc, char **argv)
     printf("socli version %s\n", PROJECT_VERSION_STR);
     printf("Targert URL: %s\n", TARGET_URL);
     printf("Built with %s\n", curl_version());
+    printf("Built with sr_keychain\n");
+    printf("Built with stb_ds\n");
+    printf("Built with stb_leakcheck\n");
+    printf("Built with ketopt\n");
+    printf("Built with kson\n");
+    printf("Built with c-logger\n");
     printf("Built on %s %s\n", __DATE__, __TIME__);
     return 0;
 }
@@ -51,7 +57,7 @@ void cleanup_memory(void)
 int check_verbose(void)
 {
     int verbose = LogLevel_INFO;
-    char *verbose_env = getenv("SOC_VERBOSE");
+    char *verbose_env = getenv("SOC_LOG_LEVEL");
     if (verbose_env)
     {
         verbose = atoi(verbose_env);
