@@ -22,6 +22,10 @@ int judge_list_command_func(struct command *self, int argc, char **argv)
     if (!(http_code == 200 && res != CURLE_ABORTED_BY_CALLBACK))
     {
         LOG_ERROR("Failed to list judges, http_code: %d", http_code);
+        if (response_body.memory)
+        {
+            LOG_DEBUG("Response: %s", response_body.memory);
+        }
         exit(EXIT_FAILURE);
     }
     kson_t *kson = kson_parse(response_body.memory);

@@ -31,10 +31,27 @@ void cleanup_memory(void)
     cleanup_commands(&root_command);
 }
 
-int main(int argc, char **argv)
+int check_verbose(void)
+{
+    int verbose = LogLevel_INFO;
+    char *verbose_env = getenv("SOC_VERBOSE");
+    if (verbose_env)
+    {
+        verbose = atoi(verbose_env);
+    }
+    free(verbose_env);
+    return verbose;
+}
+
+void set_logger(void)
 {
     logger_initConsoleLogger(stderr);
-    logger_setLevel(LogLevel_DEBUG);
+    logger_setLevel(check_verbose());
+}
+
+int main(int argc, char **argv)
+{
+    set_logger();
     printf("URL: %s\n", TARGET_URL);
     atexit(cleanup_memory);
 
