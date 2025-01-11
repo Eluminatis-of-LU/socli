@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <logger.h>
 
 struct curl_slist *headers = NULL;
 CURL *curl = NULL;
@@ -38,7 +39,7 @@ void init_curl(void)
     curl = curl_easy_init();
     if (curl == NULL)
     {
-        fprintf(stderr, "Failed to initialize curl\n");
+        LOG_ERROR("Failed to initialize curl");
         exit(EXIT_FAILURE);
     }
     atexit(cleanup_curl);
@@ -96,7 +97,7 @@ void save_cookies(void)
         {
             if (sr_keychain_set_password(TARGET_URL, "socli", cookie->data))
             {
-                fprintf(stderr, "Failed to save cookie to keyring.\n");
+                LOG_WARN("Failed to save cookie to keyring.");
             }
         }
         curl_slist_free_all(cookies);

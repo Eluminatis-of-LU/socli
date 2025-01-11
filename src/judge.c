@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <client.h>
 #include <kson.h>
+#include <logger.h>
 
 int judge_list_command_func(struct command *self, int argc, char **argv)
 {
@@ -13,20 +14,20 @@ int judge_list_command_func(struct command *self, int argc, char **argv)
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK)
     {
-        fprintf(stderr, "Failed to list judges: %s\n", curl_easy_strerror(res));
+        LOG_ERROR("Failed to list judges, curl_easy_perform() failed: %s", curl_easy_strerror(res));
         exit(EXIT_FAILURE);
     }
     CURLcode http_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     if (!(http_code == 200 && res != CURLE_ABORTED_BY_CALLBACK))
     {
-        fprintf(stderr, "Failed to list judges: %s\n", curl_easy_strerror(res));
+        LOG_ERROR("Failed to list judges, http_code: %d", http_code);
         exit(EXIT_FAILURE);
     }
     kson_t *kson = kson_parse(response_body.memory);
     if (kson == NULL)
     {
-        fprintf(stderr, "Failed to parse response.\n");
+        LOG_ERROR("Failed to parse response. %s", response_body.memory);
         exit(EXIT_FAILURE);
     }
     const kson_node_t *judges = kson_by_key(kson->root, "judges");

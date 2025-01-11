@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <kson.h>
 #include <time.h>
+#include <logger.h>
 
 int contest_list_command_func(struct command *cur, int argc, char **argv)
 {
@@ -54,21 +55,21 @@ int contest_list_command_func(struct command *cur, int argc, char **argv)
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK)
     {
-        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        LOG_ERROR("Failed to list contests, curl_easy_perform() failed: %s", curl_easy_strerror(res));
         exit(EXIT_FAILURE);
     }
     CURLcode http_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     if (!(http_code == 200 && res != CURLE_ABORTED_BY_CALLBACK))
     {
-        fprintf(stderr, "Failed to list contests: %s\n", curl_easy_strerror(res));
+        LOG_ERROR("Failed to list contests, http_code: %d", http_code);
         exit(EXIT_FAILURE);
     }
     kson_t *kson = kson_parse(response_body.memory);
 
     if (kson == NULL)
     {
-        fprintf(stderr, "Failed to parse JSON: %s\n", response_body.memory);
+        LOG_ERROR("Failed to parse JSON: %s", response_body.memory);
         exit(EXIT_FAILURE);
     }
 

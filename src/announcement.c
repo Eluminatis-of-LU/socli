@@ -4,6 +4,7 @@
 #include <ketopt.h>
 #include <stb_ds.h>
 #include <confirm.h>
+#include <logger.h>
 
 int announcement_create_command_func(struct command *cur, int argc, char **argv)
 {
@@ -60,14 +61,14 @@ int announcement_create_command_func(struct command *cur, int argc, char **argv)
         CURLcode res = curl_easy_perform(curl);
         if (res != CURLE_OK)
         {
-            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            LOG_ERROR("Failed to make announcement, curl_easy_perform() failed: %s", curl_easy_strerror(res));
             exit(EXIT_FAILURE);
         }
         CURLcode http_code;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
         if (!(http_code == 200 && res != CURLE_ABORTED_BY_CALLBACK))
         {
-            fprintf(stderr, "make announcement failed\n");
+            LOG_ERROR("Failed to make announcement: http_code: %d", http_code);
             exit(EXIT_FAILURE);
         }
         printf("make announcement success\n");

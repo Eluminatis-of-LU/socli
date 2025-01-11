@@ -29,11 +29,28 @@ if(NOT curl_FOUND)
         GIT_REPOSITORY  https://github.com/curl/curl
         GIT_TAG curl-8_11_1
     )
-    FetchContent_GetProperties(CURL)
+    FetchContent_GetProperties(curl)
     if (NOT curl_POPULATED)
         set(FETCHCONTENT_QUIET NO)
         FetchContent_Populate(curl)
         add_subdirectory(${curl_SOURCE_DIR} ${curl_BINARY_DIR})
+    endif()
+endif()
+
+find_package(c-logger QUIET)
+if (NOT c-logger_FOUND)
+    message(STATUS "c-logger not found, download...")
+    include(FetchContent)
+    FetchContent_Declare(
+        c-logger
+        GIT_REPOSITORY https://github.com/yksz/c-logger
+        GIT_TAG de61ab5bccd65c08f20d4da02e36f2d971644952
+    )
+    FetchContent_GetProperties(c-logger)
+    if (NOT c-logger_POPULATE)
+        set(FETCHCONTENT_QUIET NO)
+        FetchContent_Populate(c-logger)
+        add_subdirectory(${c-logger_SOURCE_DIR} ${c-logger_BINARY_DIR})
     endif()
 endif()
 
@@ -42,7 +59,7 @@ file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/* lib/* inclu
 message("SOURCES: ${SOURCES}")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} CURL::libcurl_static)
+target_link_libraries(${PROJECT_NAME} CURL::libcurl_static logger)
 
 if (LINUX)
     find_package(PkgConfig REQUIRED)
