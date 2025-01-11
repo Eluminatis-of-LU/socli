@@ -28,6 +28,11 @@ int print_help_and_traverse(struct command *cur, int argc, char **argv)
     {
         if (strcmp(argv[0], cur->sub[i]->name) == 0)
         {
+            if (cur->sub[i]->func == NULL)
+            {
+                printf("Command %s is not implemented.\n", cur->sub[i]->name);
+                return 0;
+            }
             return cur->sub[i]->func(cur->sub[i], argc - 1, argv + 1);
         }
     }

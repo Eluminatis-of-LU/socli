@@ -7,6 +7,7 @@
 #include <login.h>
 #include <announcement.h>
 #include <contest.h>
+#include <judge.h>
 
 #ifndef NDEBUG
 #define STB_LEAKCHECK_IMPLEMENTATION
@@ -36,9 +37,10 @@ int main(int argc, char **argv)
 
     init_curl();
 
-    arrpush(root_command.sub, init_login_command());
     arrpush(root_command.sub, init_announcement_command());
     arrpush(root_command.sub, init_contest_command());
+    arrpush(root_command.sub, init_judge_command());
+    arrpush(root_command.sub, init_login_command());
 
     return root_command.func(&root_command, argc - 1, argv + 1);
 }
