@@ -21,7 +21,6 @@ jobs:
           branch: main
           noVersionBumpBehavior: 'current'
           noNewCommitBehavior: 'current'
-          prefix: 'dev'
       - name: Update version in CMakeLists.txt
         run: |
           sed -i "s/VERSION [0-9]\+\.[0-9]\+\.[0-9]\+/VERSION ${{ steps.semver.outputs.next }}/g" CMakeLists.txt
