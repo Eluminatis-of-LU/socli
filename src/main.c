@@ -30,9 +30,9 @@ struct command root_command = {
 int version_command_func(struct command *cur, int argc, char **argv)
 {
     printf("socli version %s\n", PROJECT_VERSION_STR);
+    printf("Targert URL: %s\n", TARGET_URL);
     printf("Built with %s\n", curl_version());
     printf("Built on %s %s\n", __DATE__, __TIME__);
-    printf("Targert URL: %s\n", TARGET_URL);
     return 0;
 }
 
@@ -78,6 +78,7 @@ int main(int argc, char **argv)
     arrpush(root_command.sub, init_contest_command());
     arrpush(root_command.sub, init_judge_command());
     arrpush(root_command.sub, init_login_command());
+    arrpush(root_command.sub, &root_version_command);
 
     return root_command.func(&root_command, argc - 1, argv + 1);
 }
