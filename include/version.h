@@ -1,0 +1,11 @@
+#ifndef VERSION_H
+#define VERSION_H
+
+#define PROJECT_NAME socli
+#define PROJECT_VERSION 0.1.0
+#define PROJECT_VERSION_STR "0.1.0"
+#define PROJECT_VERSION_MAJOR 0
+#define PROJECT_VERSION_MINOR 1
+#define PROJECT_VERSION_PATCH 0
+
+#endif // VERSION_H

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
 project(socli VERSION 0.1.0 LANGUAGES C)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/template/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h @ONLY)
+
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

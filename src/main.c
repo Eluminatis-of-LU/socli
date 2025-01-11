@@ -9,6 +9,7 @@
 #include <contest.h>
 #include <judge.h>
 #include <logger.h>
+#include <version.h>
 
 #ifndef NDEBUG
 #define STB_LEAKCHECK_IMPLEMENTATION
@@ -35,6 +36,7 @@ int main(int argc, char **argv)
 {
     logger_initConsoleLogger(stderr);
     logger_setLevel(LogLevel_DEBUG);
+    printf("Version: %s\n", PROJECT_VERSION_STR);
     printf("URL: %s\n", TARGET_URL);
     atexit(cleanup_memory);
 
