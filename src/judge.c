@@ -8,8 +8,10 @@
 
 int judge_list_command_func(struct command *self, int argc, char **argv)
 {
+    LOG_TRACE("Listing judges");
     static char url[1024];
     snprintf(url, 1023, target_url("/judge"));
+    LOG_TRACE("Requesting %s", url);
     curl_easy_setopt(curl, CURLOPT_URL, url);
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK)
@@ -57,6 +59,7 @@ int judge_list_command_func(struct command *self, int argc, char **argv)
     }
 
     kson_destroy(kson);
+    LOG_TRACE("Listed judges");
     return 0;
 }
 

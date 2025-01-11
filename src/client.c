@@ -36,6 +36,7 @@ mem_cb(void *contents, size_t size, size_t nmemb, void *userp)
 
 void init_curl(void)
 {
+    LOG_TRACE("Initializing curl");
     curl = curl_easy_init();
     if (curl == NULL)
     {
@@ -53,14 +54,21 @@ void init_curl(void)
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response_body);
 
     char *cookie = NULL;
+    LOG_TRACE("Getting cookie from keyring");
     if (!sr_keychain_get_password(TARGET_URL, "socli", &cookie))
     {
+        LOG_INFO("Cookie found in keyring.");
+        LOG_TRACE("Cookie: %s", cookie);
         curl_easy_setopt(curl, CURLOPT_COOKIELIST, cookie);
         free(cookie);
     }
 
+    LOG_TRACE("Setting headers");
+    LOG_TRACE("Accept: application/json");
     headers = curl_slist_append(headers, "Accept: application/json");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    LOG_TRACE("Headers set");
+    LOG_TRACE("Curl initialized");
 }
 
 void cleanup_curl(void)
