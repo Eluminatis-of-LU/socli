@@ -9,6 +9,7 @@
 #include <contest.h>
 #include <judge.h>
 #include <logger.h>
+#include <version.h>
 
 #ifndef NDEBUG
 #define STB_LEAKCHECK_IMPLEMENTATION
@@ -25,6 +26,22 @@ struct command root_command = {
     .help = "\nUsage: socli [command] [options]\n\nCommands:\n",
     .sub = NULL,
     .func = print_help_and_traverse};
+
+int version_command_func(struct command *cur, int argc, char **argv)
+{
+    printf("socli version %s\n", PROJECT_VERSION_STR);
+    printf("Built with %s\n", curl_version());
+    printf("Built on %s %s\n", __DATE__, __TIME__);
+    printf("Targert URL: %s\n", TARGET_URL);
+    return 0;
+}
+
+struct command root_version_command = {
+    .name = "version",
+    .desc = "show version",
+    .help = "\nUsage: socli version\n\n",
+    .sub = NULL,
+    .func = version_command_func};
 
 void cleanup_memory(void)
 {
@@ -52,7 +69,7 @@ void set_logger(void)
 int main(int argc, char **argv)
 {
     set_logger();
-    printf("URL: %s\n", TARGET_URL);
+
     atexit(cleanup_memory);
 
     init_curl();

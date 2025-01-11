@@ -13,6 +13,17 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v4
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: main
+          noVersionBumpBehavior: 'current'
+          noNewCommitBehavior: 'current'
+      - name: Update version in CMakeLists.txt
+        run: |
+          sed -i "s/VERSION [0-9]\+\.[0-9]\+\.[0-9]\+/VERSION ${{ steps.semver.outputs.nextStrict }}/g" CMakeLists.txt
       - name: Build Project
         uses: threeal/cmake-action@v2.1.0
         with:
