@@ -54,22 +54,22 @@ void cleanup_memory(void)
     cleanup_commands(&root_command);
 }
 
-int check_verbose(void)
+LogLevel get_log_level(void)
 {
-    int verbose = LogLevel_INFO;
+    LogLevel verbose = LogLevel_INFO;
     char *verbose_env = getenv("SOC_LOG_LEVEL");
     if (verbose_env)
     {
-        verbose = atoi(verbose_env);
+        verbose = (LogLevel)atoi(verbose_env);
     }
-    free(verbose_env);
     return verbose;
 }
 
 void set_logger(void)
 {
     logger_initConsoleLogger(stderr);
-    logger_setLevel(check_verbose());
+    LogLevel log_level = get_log_level();
+    logger_setLevel(log_level);
 }
 
 int main(int argc, char **argv)
