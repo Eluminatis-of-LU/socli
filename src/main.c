@@ -62,7 +62,6 @@ LogLevel get_log_level(void)
     {
         verbose = (LogLevel)atoi(verbose_env);
     }
-    free(verbose_env);
     return verbose;
 }
 
