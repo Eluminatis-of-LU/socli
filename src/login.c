@@ -65,6 +65,7 @@ int login_command_func(struct command *cur, int argc, char **argv)
     }
     if (!help)
     {
+        clear_cookies();
         char postdata[1024];
         snprintf(postdata, 1023, "uname=%s&password=%s", username, password);
         curl_easy_setopt(curl, CURLOPT_URL, target_url("/login"));

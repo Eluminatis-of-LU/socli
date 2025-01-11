@@ -81,6 +81,11 @@ void cleanup_curl(void)
         free(response_body.memory);
 }
 
+void clear_cookies(void)
+{
+    curl_easy_setopt(curl, CURLOPT_COOKIELIST, "ALL");
+}
+
 void print_cookies(void)
 {
     struct curl_slist *cookies;

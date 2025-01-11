@@ -23,6 +23,7 @@ extern CURL *curl;
 void init_curl(void);
 void cleanup_curl(void);
 void print_cookies(void);
+void clear_cookies(void);
 void save_cookies(void);
 size_t noop_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata);
 
