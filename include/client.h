@@ -5,12 +5,13 @@
 #include <sr_keychain.h>
 
 #ifndef NDEBUG
-#define TARGET_URL "http://judge_ui:8888"
+// #define TARGET_URL "http://judge_ui:8888"
+#define TARGET_URL "http://localhost:8888"
 #else
 #define TARGET_URL "https://judge.eluminatis-of-lu.com"
 #endif
 
-#define target_url(x) TARGET_URL "/" x
+#define target_url(x) TARGET_URL x
 
 struct response
 {
