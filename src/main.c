@@ -69,7 +69,6 @@ void set_logger(void)
 {
     logger_initConsoleLogger(stderr);
     LogLevel log_level = get_log_level();
-    printf("Log level: %d\n", log_level);
     logger_setLevel(log_level);
 }
 
