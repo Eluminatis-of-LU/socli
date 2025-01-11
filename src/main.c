@@ -8,6 +8,7 @@
 #include <announcement.h>
 #include <contest.h>
 #include <judge.h>
+#include <logger.h>
 
 #ifndef NDEBUG
 #define STB_LEAKCHECK_IMPLEMENTATION
@@ -32,6 +33,8 @@ void cleanup_memory(void)
 
 int main(int argc, char **argv)
 {
+    logger_initConsoleLogger(stderr);
+    logger_setLevel(LogLevel_DEBUG);
     printf("URL: %s\n", TARGET_URL);
     atexit(cleanup_memory);
 

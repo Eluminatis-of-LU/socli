@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <client.h>
+#include <logger.h>
 
 char *username = NULL, *password = NULL;
 
@@ -71,14 +72,14 @@ int login_command_func(struct command *cur, int argc, char **argv)
         CURLcode res = curl_easy_perform(curl);
         if (res != CURLE_OK)
         {
-            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            LOG_ERROR("curl_easy_perform() failed: %s", curl_easy_strerror(res));
             exit(EXIT_FAILURE);
         }
         CURLcode http_code;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
         if (!((http_code == 302 || http_code == 200) && res != CURLE_ABORTED_BY_CALLBACK))
         {
-            fprintf(stderr, "login failed\n");
+            LOG_ERROR("login failed");
             exit(EXIT_FAILURE);
         }
         printf("login success\n");
