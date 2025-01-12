@@ -57,7 +57,7 @@ void init_curl(void)
     LOG_TRACE("Getting cookie from keyring");
     if (!sr_keychain_get_password(TARGET_URL, "socli", &cookie))
     {
-        LOG_INFO("Cookie found in keyring.");
+        LOG_DEBUG("Cookie found in keyring.");
         LOG_TRACE("Cookie: %s", cookie);
         curl_easy_setopt(curl, CURLOPT_COOKIELIST, cookie);
         free(cookie);
