@@ -1,5 +1,7 @@
 name: PR build validation
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
