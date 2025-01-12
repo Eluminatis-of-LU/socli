@@ -1,4 +1,4 @@
-name: PR build validation
+name: Build validation
 on:
   push:
     branches: [ main ]
