@@ -3,13 +3,14 @@ Download the latest release from [https://github.com/Eluminatis-of-LU/socli/rele
 $ socli.exe
 socli
 socli is a command line tool for managing SeriousOJ.
-URL: https://judge.eluminatis-of-lu.com
 
 Usage: socli [command] [options]
 
 Commands:
 
+  announcement
+  contest
+  judge
   login
-  make-announcement
+  version
 ```
-*You can create .env file in the directory of cli to change the TARGET_URL.*
