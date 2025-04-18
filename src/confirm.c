@@ -1,6 +1,8 @@
 #include <confirm.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 const char *random_5_characters()
 {

@@ -68,3 +68,7 @@ if (LINUX)
     pkg_check_modules(deps REQUIRED IMPORTED_TARGET glib-2.0 libsecret-1)
     target_link_libraries(${PROJECT_NAME} PkgConfig::deps)
 endif()
+
+if (UNIX)
+    install(TARGETS socli RUNTIME DESTINATION bin)
+endif()
