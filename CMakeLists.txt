@@ -43,6 +43,7 @@ find_package(c-logger QUIET)
 if (NOT c-logger_FOUND)
     message(STATUS "c-logger not found, download...")
     include(FetchContent)
+    set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
     FetchContent_Declare(
         c-logger
         GIT_REPOSITORY https://github.com/yksz/c-logger
