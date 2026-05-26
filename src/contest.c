@@ -49,8 +49,8 @@ int contest_list_command_func(struct command *cur, int argc, char **argv)
         print_help(cur);
         return 0;
     }
-    static char url[1024];
-    snprintf(url, 1023, target_url("/api/v1/contest?page=%d"), page);
+    char url[1024];
+    snprintf(url, sizeof(url), "%s/api/v1/contest?page=%d", g_target_url, page);
     curl_easy_setopt(curl, CURLOPT_URL, url);
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK)

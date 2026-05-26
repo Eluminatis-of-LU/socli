@@ -7,6 +7,17 @@
 struct curl_slist *headers = NULL;
 CURL *curl = NULL;
 struct response response_body = {0};
+char g_target_url[256] = TARGET_URL;
+
+void set_target_url(const char *url)
+{
+    strncpy(g_target_url, url, sizeof(g_target_url) - 1);
+    g_target_url[sizeof(g_target_url) - 1] = '\0';
+    /* remove trailing slash if present */
+    size_t len = strlen(g_target_url);
+    if (len > 0 && g_target_url[len - 1] == '/')
+        g_target_url[len - 1] = '\0';
+}
 
 static size_t
 mem_cb(void *contents, size_t size, size_t nmemb, void *userp)
@@ -55,7 +66,7 @@ void init_curl(void)
 
     char *cookie = NULL;
     LOG_TRACE("Getting cookie from keyring");
-    if (!sr_keychain_get_password(TARGET_URL, "socli", &cookie))
+    if (!sr_keychain_get_password(g_target_url, "socli", &cookie))
     {
         LOG_DEBUG("Cookie found in keyring.");
         LOG_TRACE("Cookie: %s", cookie);
@@ -108,7 +119,7 @@ void save_cookies(void)
     {
         for (struct curl_slist *cookie = cookies; cookie; cookie = cookie->next)
         {
-            if (sr_keychain_set_password(TARGET_URL, "socli", cookie->data))
+            if (sr_keychain_set_password(g_target_url, "socli", cookie->data))
             {
                 LOG_WARN("Failed to save cookie to keyring.");
             }

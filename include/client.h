@@ -10,7 +10,8 @@
 #define TARGET_URL "https://serious-oj.com"
 #endif
 
-#define target_url(x) TARGET_URL x
+extern char g_target_url[256];
+void set_target_url(const char *url);
 
 struct response
 {
