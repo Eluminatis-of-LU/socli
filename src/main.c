@@ -92,7 +92,6 @@ int main(int argc, char **argv)
             break;
         }
     }
-
     atexit(cleanup_memory);
 
     init_curl();
