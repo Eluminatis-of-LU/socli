@@ -53,6 +53,7 @@ PR titles and commit messages drive the semver bump:
 1. Create `src/<cmd>.c` and `include/<cmd>.h` with `init_<cmd>_command(void)`
 2. Register in `main.c` via `arrpush(root_command.sub, init_<cmd>_command())`
 3. The `CMakeLists.txt` uses `file(GLOB_RECURSE)` — no CMake changes needed for new `.c`/`.h` files
+4. Update `README.md` to document the new command
 
 ## CI workflows
 
