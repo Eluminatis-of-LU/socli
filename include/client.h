@@ -7,7 +7,7 @@
 #ifndef NDEBUG
 #define TARGET_URL "http://judge_ui:8888"
 #else
-#define TARGET_URL "https://judge.eluminatis-of-lu.com"
+#define TARGET_URL "https://serious-oj.com"
 #endif
 
 #define target_url(x) TARGET_URL x
