@@ -8,6 +8,7 @@
 #include <announcement.h>
 #include <contest.h>
 #include <judge.h>
+#include <user.h>
 #include <logger.h>
 #include <version.h>
 
@@ -100,6 +101,7 @@ int main(int argc, char **argv)
     arrpush(root_command.sub, init_contest_command());
     arrpush(root_command.sub, init_judge_command());
     arrpush(root_command.sub, init_login_command());
+    arrpush(root_command.sub, init_user_command());
     arrpush(root_command.sub, &root_version_command);
 
     return root_command.func(&root_command, argc - global_opt.ind, argv + global_opt.ind);
