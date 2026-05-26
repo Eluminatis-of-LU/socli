@@ -56,7 +56,9 @@ int announcement_create_command_func(struct command *cur, int argc, char **argv)
         {
             return 0;
         }
-        curl_easy_setopt(curl, CURLOPT_URL, target_url("/api/v1/announcement"));
+        char url[1024];
+        snprintf(url, sizeof(url), "%s/api/v1/announcement", g_target_url);
+        curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postdata);
         CURLcode res = curl_easy_perform(curl);
         if (res != CURLE_OK)

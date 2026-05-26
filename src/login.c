@@ -68,7 +68,9 @@ int login_command_func(struct command *cur, int argc, char **argv)
         clear_cookies();
         char postdata[1024];
         snprintf(postdata, 1023, "uname=%s&password=%s", username, password);
-        curl_easy_setopt(curl, CURLOPT_URL, target_url("/login"));
+        char url[1024];
+        snprintf(url, sizeof(url), "%s/login", g_target_url);
+        curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postdata);
         CURLcode res = curl_easy_perform(curl);
         if (res != CURLE_OK)

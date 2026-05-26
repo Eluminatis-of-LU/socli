@@ -9,8 +9,8 @@
 int judge_list_command_func(struct command *self, int argc, char **argv)
 {
     LOG_TRACE("Listing judges");
-    static char url[1024];
-    snprintf(url, 1023, target_url("/judge"));
+    char url[1024];
+    snprintf(url, sizeof(url), "%s/judge", g_target_url);
     LOG_TRACE("Requesting %s", url);
     curl_easy_setopt(curl, CURLOPT_URL, url);
     CURLcode res = curl_easy_perform(curl);

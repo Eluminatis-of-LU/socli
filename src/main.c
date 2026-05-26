@@ -30,7 +30,7 @@ struct command root_command = {
 int version_command_func(struct command *cur, int argc, char **argv)
 {
     printf("socli version %s\n", PROJECT_VERSION_STR);
-    printf("Targert URL: %s\n", TARGET_URL);
+    printf("Target URL: %s\n", g_target_url);
     printf("Built with %s\n", curl_version());
     printf("Built with sr_keychain\n");
     printf("Built with stb_ds\n");
@@ -76,6 +76,23 @@ int main(int argc, char **argv)
 {
     set_logger();
 
+    static ko_longopt_t global_longopts[] = {
+        {"url", 1, 0},
+        {0, 0, 0}};
+    ketopt_t global_opt = KETOPT_INIT;
+    int global_c;
+    while ((global_c = ketopt(&global_opt, argc, argv, 0, "", global_longopts)) != -1)
+    {
+        if (global_c == '?' || global_c == ':')
+            continue;
+        switch (global_opt.longidx)
+        {
+        case 0:
+            set_target_url(global_opt.arg);
+            break;
+        }
+    }
+
     atexit(cleanup_memory);
 
     init_curl();
@@ -86,5 +103,5 @@ int main(int argc, char **argv)
     arrpush(root_command.sub, init_login_command());
     arrpush(root_command.sub, &root_version_command);
 
-    return root_command.func(&root_command, argc - 1, argv + 1);
+    return root_command.func(&root_command, argc - global_opt.ind, argv + global_opt.ind);
 }
